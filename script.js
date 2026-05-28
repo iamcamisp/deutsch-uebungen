@@ -9,9 +9,12 @@ const TODAY = new Date().toISOString().slice(0, 10);
 // ────────────────────────────────────────────────────────────────
 // State
 // ────────────────────────────────────────────────────────────────
-let DATA = null;
-let LESSONS = [];          // [{theme, topic, exercises:[…]}], current filter applied
-let idx = 0;               // current lesson index
+let DATA = null;           // exercises.json
+let THEORY = null;         // theory.json
+let MODE = 'exercises';    // 'exercises' | 'theory'
+let LESSONS = [];          // (in exercises mode) [{theme, topic, exercises:[…]}]
+let THEORY_PAGES = [];     // (in theory mode) filtered list of theory lessons
+let idx = 0;               // current page index
 let activeTopic = 'all';
 
 const state = loadState();
@@ -60,17 +63,36 @@ function scorePct() {
 // ────────────────────────────────────────────────────────────────
 async function init() {
   try {
-    const res = await fetch('exercises.json?_t=' + Date.now());
-    DATA = await res.json();
+    const [eRes, tRes] = await Promise.all([
+      fetch('exercises.json?_t=' + Date.now()),
+      fetch('theory.json?_t=' + Date.now()).catch(() => null)
+    ]);
+    DATA = await eRes.json();
+    if (tRes && tRes.ok) THEORY = await tRes.json();
   } catch (e) {
     document.getElementById('card-root').innerHTML =
-      '<div class="empty">Konnte exercises.json nicht laden. Lokal? <code>python3 -m http.server 8765</code></div>';
+      '<div class="empty">Konnte Daten nicht laden. Lokal? <code>python3 -m http.server 8765</code></div>';
     return;
   }
-  renderTopics();
-  applyFilter('all');
+  wireTabs();
+  setMode('exercises');
   renderStats();
   wireNav();
+}
+
+function wireTabs() {
+  document.querySelectorAll('.mode-tab').forEach(btn => {
+    btn.onclick = () => setMode(btn.dataset.mode);
+  });
+}
+
+function setMode(m) {
+  MODE = m;
+  document.querySelectorAll('.mode-tab').forEach(b =>
+    b.classList.toggle('active', b.dataset.mode === m));
+  idx = 0;
+  renderTopics();
+  applyFilter(activeTopic);
 }
 
 function wireNav() {
@@ -85,31 +107,39 @@ function wireNav() {
 
 function applyFilter(slug) {
   activeTopic = slug;
-  const exercises = (slug === 'all')
-    ? DATA.exercises.slice()
-    : DATA.exercises.filter(e => e.topic === slug);
-
-  // Group by theme, preserving first-occurrence order
-  const groups = new Map();
-  for (const ex of exercises) {
-    const key = ex.theme || ex.topic || 'Sonstiges';
-    if (!groups.has(key)) {
-      groups.set(key, { theme: key, topic: ex.topic, exercises: [] });
+  if (MODE === 'exercises') {
+    const exercises = (slug === 'all')
+      ? DATA.exercises.slice()
+      : DATA.exercises.filter(e => e.topic === slug);
+    const groups = new Map();
+    for (const ex of exercises) {
+      const key = ex.theme || ex.topic || 'Sonstiges';
+      if (!groups.has(key)) {
+        groups.set(key, { theme: key, topic: ex.topic, exercises: [] });
+      }
+      groups.get(key).exercises.push(ex);
     }
-    groups.get(key).exercises.push(ex);
+    LESSONS = Array.from(groups.values());
+  } else {
+    const all = (THEORY && THEORY.lessons) ? THEORY.lessons : [];
+    THEORY_PAGES = (slug === 'all') ? all.slice() : all.filter(l => l.topic === slug);
   }
-  LESSONS = Array.from(groups.values());
   idx = 0;
   renderTopics();
-  renderLesson();
+  renderCurrentPage();
 }
 
 function goto(n) {
-  if (n < 0 || n >= LESSONS.length) return;
+  const total = (MODE === 'exercises') ? LESSONS.length : THEORY_PAGES.length;
+  if (n < 0 || n >= total) return;
   idx = n;
-  renderLesson();
-  // Scroll to top of card area
+  renderCurrentPage();
   document.getElementById('card-root').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderCurrentPage() {
+  if (MODE === 'exercises') renderLesson();
+  else renderTheoryPage();
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -118,9 +148,15 @@ function goto(n) {
 function renderTopics() {
   const root = document.getElementById('topics');
   const counts = {};
-  DATA.exercises.forEach(e => counts[e.topic] = (counts[e.topic] || 0) + 1);
+  const total = (MODE === 'exercises')
+    ? (DATA.exercises.forEach(e => counts[e.topic] = (counts[e.topic] || 0) + 1), DATA.exercises.length)
+    : (() => {
+        const all = (THEORY && THEORY.lessons) ? THEORY.lessons : [];
+        all.forEach(l => counts[l.topic] = (counts[l.topic] || 0) + 1);
+        return all.length;
+      })();
 
-  const items = [{ slug: 'all', name: 'Alle', count: DATA.exercises.length }]
+  const items = [{ slug: 'all', name: 'Alle', count: total }]
     .concat(DATA.topics.map(t => ({ slug: t.slug, name: t.name, count: counts[t.slug] || 0 })));
 
   root.innerHTML = items.map(t =>
@@ -144,12 +180,13 @@ function renderStats() {
 }
 
 function renderProgress() {
-  const total = LESSONS.length;
+  const total = (MODE === 'exercises') ? LESSONS.length : THEORY_PAGES.length;
+  const label = (MODE === 'exercises') ? 'Thema' : 'Lektion';
   const pct = total === 0 ? 0 : Math.round(((idx + 1) / total) * 100);
   document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('pos-text').textContent = `Thema ${idx + 1} von ${total}`;
+  document.getElementById('pos-text').textContent = `${label} ${idx + 1} von ${total}`;
   document.getElementById('pct-text').textContent = pct + ' %';
-  document.getElementById('nav-pos').textContent = `Thema ${idx + 1} von ${total}`;
+  document.getElementById('nav-pos').textContent = `${label} ${idx + 1} von ${total}`;
   document.getElementById('btn-back').disabled = idx === 0;
   document.getElementById('btn-next').disabled = idx === total - 1;
 }
@@ -186,6 +223,84 @@ function renderLesson() {
 
   lesson.exercises.forEach(ex => attachExerciseHandlers(ex));
   renderProgress();
+}
+
+// ────────────────────────────────────────────────────────────────
+// Render: theory lesson (block-based)
+// ────────────────────────────────────────────────────────────────
+function renderTheoryPage() {
+  const root = document.getElementById('card-root');
+  const nav = document.getElementById('nav');
+
+  if (THEORY_PAGES.length === 0) {
+    root.innerHTML = '<div class="empty">Keine Theorie für dieses Thema. Aus den nächsten Klassen wird der Inhalt generiert.</div>';
+    nav.style.display = 'none';
+    renderProgress();
+    return;
+  }
+  nav.style.display = 'flex';
+
+  const lesson = THEORY_PAGES[idx];
+  const blocks = (lesson.body || []).map(renderBlock).join('');
+
+  // Cross-link to exercises if theme matches
+  let cross = '';
+  if (lesson.exercise_theme) {
+    const hasMatchingEx = DATA.exercises.some(e => e.theme === lesson.exercise_theme);
+    if (hasMatchingEx) {
+      cross = `
+        <div class="theory-cross">
+          <button class="cross-link" data-action="jump-exercises" data-theme="${escapeAttr(lesson.exercise_theme)}">Zu den Übungen →</button>
+          <span style="color: var(--muted); font-size: 13px;">${countEx(lesson.exercise_theme)} Übungen zu diesem Thema</span>
+        </div>`;
+    }
+  }
+
+  root.innerHTML = `
+    <div class="theory-card">
+      <h2 class="theory-title">${lesson.title}</h2>
+      ${lesson.intro ? `<div class="theory-intro">${lesson.intro}</div>` : ''}
+      ${blocks}
+      ${cross}
+    </div>`;
+
+  const btn = root.querySelector('[data-action="jump-exercises"]');
+  if (btn) btn.onclick = () => {
+    setMode('exercises');
+    const target = LESSONS.findIndex(L => L.theme === btn.dataset.theme);
+    if (target >= 0) { idx = target; renderCurrentPage(); }
+  };
+
+  renderProgress();
+}
+
+function countEx(theme) {
+  return DATA.exercises.filter(e => e.theme === theme).length;
+}
+
+function renderBlock(b) {
+  switch (b.type) {
+    case 'heading':
+      return `<h3 class="th-h">${b.text}</h3>`;
+    case 'paragraph':
+      return `<p class="th-p">${b.text}</p>`;
+    case 'table':
+      return `<table class="th-table">
+        <thead><tr>${(b.headers || []).map(h => `<th>${h}</th>`).join('')}</tr></thead>
+        <tbody>${(b.rows || []).map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table>`;
+    case 'examples':
+      return `<div class="th-examples">${(b.items || []).map(e => `<div class="ex">${e}</div>`).join('')}</div>`;
+    case 'callout':
+      return `<div class="th-callout ${b.kind || 'info'}">
+        ${b.title ? `<span class="title">${b.title}</span>` : ''}
+        ${b.text}
+      </div>`;
+    case 'list':
+      return `<ul class="th-list">${(b.items || []).map(i => `<li>${i}</li>`).join('')}</ul>`;
+    default:
+      return '';
+  }
 }
 
 // ────────────────────────────────────────────────────────────────

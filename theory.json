@@ -1,0 +1,423 @@
+{
+  "owner": "Cami",
+  "level": "C1",
+  "generated_at": "2026-05-28",
+  "topics": [
+    { "slug": "konjunktionen",    "name": "Konjunktionen" },
+    { "slug": "konjunktiv1",      "name": "Konjunktiv I" },
+    { "slug": "praepositionen",   "name": "Präpositionen" },
+    { "slug": "wortschatz",       "name": "Wortschatz" },
+    { "slug": "wortstellung",     "name": "Wortstellung" },
+    { "slug": "adjektivendungen", "name": "Adjektivendungen" }
+  ],
+  "lessons": [
+    {
+      "id": "konjunktionen-konzessiv-kausal-konditional",
+      "topic": "konjunktionen",
+      "theme": "Konzessiv-, Kausal- & Konditionalsätze",
+      "title": "Konzessiv-, Kausal- und Konditionalsätze",
+      "intro": "Diese drei Nebensatztypen verbindet etwas Wichtiges: Sie verändern <strong>die Beziehung zwischen Haupt- und Nebensatz</strong>, ohne die Information selbst zu ändern. Auf C1-Niveau ist die feine Wahl der Konjunktion entscheidend für den Stil.",
+      "body": [
+        { "type": "heading", "text": "1. Konzessivsätze — der unerwartete Gegensatz" },
+        { "type": "paragraph", "text": "Ein Konzessivsatz drückt aus, dass etwas trotz eines Hindernisses oder einer Erwartung geschieht. Die Hauptaussage gilt, <em>obwohl</em> ein Gegenargument existiert." },
+        {
+          "type": "table",
+          "headers": ["Konjunktion", "Register", "Beispiel"],
+          "rows": [
+            ["obwohl", "neutral, häufigste Form", "Sie hat zugesagt, obwohl sie kaum Zeit hat."],
+            ["obgleich", "gehoben, schriftsprachlich", "Er nahm an, obgleich es ihm nicht passte."],
+            ["wenngleich", "gehoben", "Die Reform ist wichtig, wenngleich umstritten."],
+            ["auch wenn", "neutral, oft mit hypothetischem Beiklang", "Sie kommt, auch wenn es regnet."],
+            ["selbst wenn", "betonter Gegensatz", "Selbst wenn er kommt, wird es nichts ändern."]
+          ]
+        },
+        {
+          "type": "callout",
+          "kind": "tip",
+          "title": "Stilistischer Tipp",
+          "text": "In journalistischen und akademischen Texten klingt <em>obgleich</em> oder <em>wenngleich</em> präziser als das alltägliche <em>obwohl</em>. Übertreib es aber nicht — zwei pro Text reichen."
+        },
+
+        { "type": "heading", "text": "2. Kausalsätze — der Grund" },
+        { "type": "paragraph", "text": "Ein Kausalsatz nennt den Grund für die Hauptaussage. Die wichtigsten Konjunktionen unterscheiden sich in der Stärke und dem Register." },
+        {
+          "type": "table",
+          "headers": ["Konjunktion", "Funktion", "Beispiel"],
+          "rows": [
+            ["weil", "neutral, häufigste Form", "Ich komme später, weil mein Zug Verspätung hat."],
+            ["da", "leicht gehoben, oft am Satzanfang", "Da der Termin verschoben wurde, bleibt mehr Zeit."],
+            ["zumal", "verstärkt einen Grund (= besonders weil)", "Wir sollten absagen, zumal viele krank sind."],
+            ["nämlich", "Hauptsatzposition! erklärt nachträglich", "Er kann nicht kommen; er ist nämlich krank."]
+          ]
+        },
+        {
+          "type": "callout",
+          "kind": "warning",
+          "title": "Häufiger Fehler",
+          "text": "<strong>„nämlich\"</strong> ist KEINE Subjunktion! Es steht immer im <strong>Hauptsatz</strong>, in der Regel an Position 3 oder 4. Falsch: <em>… , nämlich er krank ist.</em> Richtig: <em>… ; er ist nämlich krank.</em>"
+        },
+        { "type": "paragraph", "text": "<strong>zumal</strong> verstärkt einen schon bestehenden Grund. Es funktioniert ähnlich wie das englische <em>especially because</em> — der Hauptsatz wäre auch ohne den zumal-Satz richtig, aber der zusätzliche Grund macht ihn schlagkräftiger." },
+
+        { "type": "heading", "text": "3. Konditionalsätze — die Bedingung" },
+        { "type": "paragraph", "text": "Ein Konditionalsatz nennt eine Bedingung, unter der die Hauptaussage gilt. Auf C1-Niveau musst du zwischen realen, hypothetischen und irrealen Bedingungen unterscheiden." },
+        {
+          "type": "table",
+          "headers": ["Konjunktion", "Bedingungstyp", "Beispiel"],
+          "rows": [
+            ["wenn", "real (häufigste Form)", "Wenn du Zeit hast, ruf mich an."],
+            ["falls", "real, mit Unsicherheit (= im Fall, dass)", "Falls es regnet, bleiben wir zu Hause."],
+            ["sofern", "real, mit Vorbehalt (= unter der Bedingung)", "Wir liefern morgen, sofern alle Bestellungen eingehen."],
+            ["sobald", "zeitlich-konditional (= as soon as)", "Sobald die Daten eintreffen, beginnen wir."],
+            ["solange", "zeitlich-konditional (Bedingung dauert an)", "Solange die Krise andauert, gelten Sondervorschriften."]
+          ]
+        },
+        {
+          "type": "callout",
+          "kind": "info",
+          "title": "Stil-Hinweis: Konditional ohne <em>wenn</em>",
+          "text": "Im gehobenen Stil kann man <em>wenn</em> weglassen und das Verb an den Satzanfang stellen: <em>„Hätte ich das gewusst, wäre ich gekommen.\"</em> Sehr typisch in Essays und literarischen Texten."
+        },
+
+        { "type": "heading", "text": "Häufige Verwechslungen" },
+        {
+          "type": "list",
+          "items": [
+            "<strong>obwohl ↔ trotzdem</strong>: „obwohl\" leitet einen Nebensatz ein (Verb am Ende), „trotzdem\" ist ein Adverb im Hauptsatz (Position 1 oder 3).",
+            "<strong>weil ↔ denn</strong>: „weil\" → Nebensatz, Verb am Ende. „denn\" → Hauptsatz mit normaler Wortstellung. Beispiel: <em>„… weil sie müde ist.\" vs. „… , denn sie ist müde.\"</em>",
+            "<strong>wenn ↔ falls</strong>: Beide drücken Bedingung aus, aber „falls\" signalisiert mehr Unsicherheit. „Wenn der Zug kommt\" = erwartet. „Falls der Zug kommt\" = nicht sicher.",
+            "<strong>zumal ↔ vor allem weil</strong>: Quasi-synonym, aber „zumal\" ist eine Subjunktion (Verb am Ende), „vor allem weil\" ist eine Verkettung von Adverb + Konjunktion."
+          ]
+        }
+      ],
+      "exercise_theme": "Konzessiv-, Kausal- & Konditionalsätze"
+    },
+
+    {
+      "id": "konjunktiv1-indirekte-rede",
+      "topic": "konjunktiv1",
+      "theme": "Konjunktiv I, ersatzweise Konjunktiv II",
+      "title": "Konjunktiv I in der indirekten Rede",
+      "intro": "Der Konjunktiv I ist der Modus der <strong>indirekten Rede</strong> — er zeigt an, dass jemand etwas gesagt hat, ohne dass der Sprecher die Aussage übernimmt. In journalistischen und juristischen Texten ist er Pflicht.",
+      "body": [
+        { "type": "heading", "text": "Wann brauchst du Konjunktiv I?" },
+        {
+          "type": "list",
+          "items": [
+            "<strong>Pressetexte</strong>: „Der Minister erklärte, er werde die Reform durchsetzen.\"",
+            "<strong>Zitate ohne Anführungszeichen</strong>: berichtende Sprache in Nachrichten und Berichten.",
+            "<strong>Formelle schriftliche Berichte</strong>: Protokolle, Gerichtsurteile, wissenschaftliche Referate."
+          ]
+        },
+
+        { "type": "heading", "text": "Konjunktiv-I-Formen — die Grundregel" },
+        { "type": "paragraph", "text": "Der Konjunktiv I bildet sich vom Infinitivstamm + Konjunktiv-Endungen (-e, -est, -e, -en, -et, -en). Bei den meisten Verben sieht das so aus:" },
+        {
+          "type": "table",
+          "headers": ["Person", "haben", "sein", "werden", "können", "müssen"],
+          "rows": [
+            ["ich",       "habe",   "sei",     "werde",   "könne",   "müsse"],
+            ["du",        "habest", "seist",   "werdest", "könnest", "müssest"],
+            ["er/sie/es", "habe",   "sei",     "werde",   "könne",   "müsse"],
+            ["wir",       "haben*", "seien",   "werden*", "können*", "müssen*"],
+            ["ihr",       "habet",  "seiet",   "werdet*", "könnet",  "müsset"],
+            ["sie/Sie",   "haben*", "seien",   "werden*", "können*", "müssen*"]
+          ]
+        },
+        {
+          "type": "callout",
+          "kind": "warning",
+          "title": "Sterne markieren das Hauptproblem",
+          "text": "Bei vielen Verbformen ist der <strong>Konjunktiv I identisch mit dem Indikativ Präsens</strong> (z. B. „wir haben\" KI = „wir haben\" Ind.). Dort weicht man auf den <strong>Konjunktiv II</strong> aus: „sie hätten\" statt „sie haben\"."
+        },
+
+        { "type": "heading", "text": "Die Ausweichregel: wann KII statt KI?" },
+        {
+          "type": "list",
+          "items": [
+            "Wenn KI nicht eindeutig vom Indikativ unterscheidbar ist → KII (z.B. <em>sie hätten</em> statt <em>sie haben</em>).",
+            "Im gesprochenen Deutsch wird KI oft komplett durch KII ersetzt, klingt aber im Schriftlichen weniger formell.",
+            "Wenn auch KII nicht klar ist (selten), greift man auf die <em>würde</em>-Form: <em>sie würden gehen</em>."
+          ]
+        },
+
+        { "type": "heading", "text": "Zeitenverschiebung in der indirekten Rede" },
+        {
+          "type": "table",
+          "headers": ["direkte Rede", "indirekte Rede (KI/KII)"],
+          "rows": [
+            ["Präsens: „Ich arbeite hier.\"",                "Präsens: „Sie sagte, sie arbeite hier.\""],
+            ["Perfekt: „Ich habe es getan.\"",               "Perfekt: „Sie sagte, sie habe es getan.\""],
+            ["Präteritum: „Ich war müde.\"",                 "Perfekt: „Sie sagte, sie sei müde gewesen.\""],
+            ["Plusquamperfekt: „Ich hatte geschlafen.\"",    "Perfekt: „Sie sagte, sie habe geschlafen.\""],
+            ["Futur I: „Ich werde kommen.\"",                "Futur I: „Sie sagte, sie werde kommen.\" / werde→würde im Plural"]
+          ]
+        },
+        {
+          "type": "callout",
+          "kind": "info",
+          "title": "Merksatz",
+          "text": "Konjunktiv I für die Gegenwart (KI Präsens), für die Vergangenheit IMMER Perfekt (auch wenn das Original Präteritum oder Plusquamperfekt war), für die Zukunft Futur I."
+        },
+
+        { "type": "heading", "text": "Häufige Strukturen" },
+        {
+          "type": "examples",
+          "items": [
+            "Sie erklärte, das Projekt sei termingerecht abgeschlossen worden. <em>(KI Passiv Perfekt)</em>",
+            "Der Bericht stellt fest, die Zahlen hätten sich verschlechtert. <em>(KII statt KI „haben\")</em>",
+            "Er behauptete, er werde an der Sitzung teilnehmen können. <em>(KI Futur I + Modalverb)</em>",
+            "Laut Presse plane die Regierung neue Maßnahmen. <em>(KI ohne „dass\", typisch journalistisch)</em>"
+          ]
+        }
+      ],
+      "exercise_theme": "Konjunktiv I, ersatzweise Konjunktiv II"
+    },
+
+    {
+      "id": "wortstellung-nebensatz-mittelfeld",
+      "topic": "wortstellung",
+      "theme": "Verbendstellung im Nebensatz (Ersatzinfinitiv)",
+      "title": "Wortstellung: Nebensatz & Mittelfeld",
+      "intro": "Auf C1-Niveau ist Wortstellung nicht mehr nur „Verb ans Ende\" — es geht um <strong>Mittelfeldreihenfolge, Ersatzinfinitiv und Nominalstil</strong>.",
+      "body": [
+        { "type": "heading", "text": "Verbendstellung — die Grundregel" },
+        { "type": "paragraph", "text": "Im Nebensatz steht das konjugierte Verb am Ende. Bei mehreren Verben gilt: das konjugierte Verb steht ganz hinten, davor stehen Infinitive und Partizipien." },
+        {
+          "type": "examples",
+          "items": [
+            "…, weil sie das Projekt <em>abgeschlossen hat</em>.",
+            "…, dass er sich darüber <em>geärgert hatte</em>.",
+            "…, obwohl sie nicht <em>hatte teilnehmen können</em>. <strong>(Ersatzinfinitiv!)</strong>"
+          ]
+        },
+
+        { "type": "heading", "text": "Der Ersatzinfinitiv (mit Modalverben)" },
+        { "type": "paragraph", "text": "Wenn ein Modalverb (können, müssen, dürfen, …) im Perfekt mit einem anderen Vollverb steht, verwendest du KEIN Partizip II des Modalverbs, sondern den <strong>Ersatzinfinitiv</strong> (= die Infinitiv-Form). Und: das <em>hat / hatte</em> wandert nach vorn vor die beiden Infinitive." },
+        {
+          "type": "table",
+          "headers": ["Hauptsatz (Perfekt)", "Nebensatz (Ersatzinfinitiv)"],
+          "rows": [
+            ["Sie hat nicht teilnehmen können.", "…, weil sie nicht <strong>hat</strong> teilnehmen können."],
+            ["Er hatte das Buch lesen müssen.",  "…, obwohl er das Buch <strong>hatte</strong> lesen müssen."],
+            ["Wir haben es ihm sagen wollen.",   "…, dass wir es ihm <strong>haben</strong> sagen wollen."]
+          ]
+        },
+        {
+          "type": "callout",
+          "kind": "warning",
+          "title": "Typische Stolperfalle",
+          "text": "Falsch: <em>„…, weil sie nicht hat teilnehmen gekonnt.\"</em><br>Richtig: <em>„…, weil sie nicht hat teilnehmen können.\"</em>"
+        },
+
+        { "type": "heading", "text": "Mittelfeld — die TeKaMoLo-Faustregel" },
+        { "type": "paragraph", "text": "Im Mittelfeld (zwischen Subjekt/Verb-Position 2 und dem Satzende) ist die Reihenfolge der Ergänzungen flexibel, aber es gibt eine starke Tendenz: <strong>Te–Ka–Mo–Lo</strong> = Temporal · Kausal · Modal · Lokal." },
+        {
+          "type": "table",
+          "headers": ["Te (wann)", "Ka (warum)", "Mo (wie)", "Lo (wo)"],
+          "rows": [
+            ["gestern", "wegen der Verspätung", "höflich", "im Büro"],
+            ["nach der Sitzung", "aus Höflichkeit", "schnell", "vor dem Haus"]
+          ]
+        },
+        {
+          "type": "examples",
+          "items": [
+            "Sie hat <em>gestern</em> <em>wegen des Termins</em> <em>schnell</em> <em>im Büro</em> angerufen.",
+            "Er ist <em>nach der Sitzung</em> <em>aus Höflichkeit</em> <em>mit ihr</em> noch <em>zur Tür</em> gegangen."
+          ]
+        },
+
+        { "type": "heading", "text": "Pronomen vor Substantiven" },
+        { "type": "paragraph", "text": "Pronomen rutschen so weit wie möglich nach vorn — vor andere Mittelfeld-Elemente. Die Reihenfolge der Pronomen ist: <strong>Nom → Akk → Dat</strong> (für Pronomen gilt also die umgekehrte Reihenfolge wie bei Substantiven!)." },
+        {
+          "type": "examples",
+          "items": [
+            "Sie hat <em>ihn ihr</em> gestern vorgestellt. <em>(Pron. zuerst, Akk vor Dat)</em>",
+            "Sie hat <em>ihrer Kollegin</em> gestern <em>den neuen Praktikanten</em> vorgestellt. <em>(Subst.: Dat vor Akk)</em>"
+          ]
+        }
+      ],
+      "exercise_theme": "Verbendstellung im Nebensatz (Ersatzinfinitiv)"
+    },
+
+    {
+      "id": "adjektivendungen-vollstaendig",
+      "topic": "adjektivendungen",
+      "theme": "Adjektivdeklination nach unbestimmtem/bestimmtem Artikel",
+      "title": "Adjektivendungen — die drei Deklinationen",
+      "intro": "Adjektivendungen werden auf C1-Niveau erwartet, aber selbst Muttersprachler stolpern. Der Schlüssel: <strong>Welche Information ist schon im Artikel enthalten?</strong> Wenn der Artikel Genus/Kasus zeigt, bekommt das Adjektiv die schwache Endung (-e/-en). Wenn nicht, muss das Adjektiv selbst die Information tragen (stark) oder gemischt (-er/-en).",
+      "body": [
+        { "type": "heading", "text": "1. Schwache Deklination — nach bestimmtem Artikel" },
+        { "type": "paragraph", "text": "Nach „der/die/das\" und allen <em>dieser, jener, jeder, mancher, solcher, welcher</em>: nur <strong>-e</strong> oder <strong>-en</strong>." },
+        {
+          "type": "table",
+          "headers": ["", "maskulin", "neutrum", "feminin", "Plural"],
+          "rows": [
+            ["Nom", "der gut<strong>e</strong> Wein",  "das gut<strong>e</strong> Bier",  "die gut<strong>e</strong> Idee",  "die gut<strong>en</strong> Ideen"],
+            ["Akk", "den gut<strong>en</strong> Wein", "das gut<strong>e</strong> Bier",  "die gut<strong>e</strong> Idee",  "die gut<strong>en</strong> Ideen"],
+            ["Dat", "dem gut<strong>en</strong> Wein", "dem gut<strong>en</strong> Bier", "der gut<strong>en</strong> Idee", "den gut<strong>en</strong> Ideen"],
+            ["Gen", "des gut<strong>en</strong> Weines", "des gut<strong>en</strong> Bieres", "der gut<strong>en</strong> Idee", "der gut<strong>en</strong> Ideen"]
+          ]
+        },
+
+        { "type": "heading", "text": "2. Gemischte Deklination — nach unbestimmtem Artikel & Possessivpronomen" },
+        { "type": "paragraph", "text": "Nach „ein/eine/kein\" und Possessiva (mein, dein, sein, ihr, unser, euer, ihr/Ihr): das Adjektiv trägt die Information, wenn der Artikel es nicht tut (Nom Sg mask/neutr, Akk Sg neutr)." },
+        {
+          "type": "table",
+          "headers": ["", "maskulin", "neutrum", "feminin", "Plural (kein)"],
+          "rows": [
+            ["Nom", "ein gut<strong>er</strong> Wein",  "ein gut<strong>es</strong> Bier",  "eine gut<strong>e</strong> Idee",  "keine gut<strong>en</strong> Ideen"],
+            ["Akk", "einen gut<strong>en</strong> Wein", "ein gut<strong>es</strong> Bier",  "eine gut<strong>e</strong> Idee",  "keine gut<strong>en</strong> Ideen"],
+            ["Dat", "einem gut<strong>en</strong> Wein", "einem gut<strong>en</strong> Bier", "einer gut<strong>en</strong> Idee", "keinen gut<strong>en</strong> Ideen"],
+            ["Gen", "eines gut<strong>en</strong> Weines", "eines gut<strong>en</strong> Bieres", "einer gut<strong>en</strong> Idee", "keiner gut<strong>en</strong> Ideen"]
+          ]
+        },
+
+        { "type": "heading", "text": "3. Starke Deklination — ohne Artikel" },
+        { "type": "paragraph", "text": "Wenn kein Artikel da ist, übernimmt das Adjektiv die Funktion des Artikels und bekommt die Artikelendungen (außer bei Gen mask/neutr Sg, dort -en)." },
+        {
+          "type": "table",
+          "headers": ["", "maskulin", "neutrum", "feminin", "Plural"],
+          "rows": [
+            ["Nom", "gut<strong>er</strong> Wein",   "gut<strong>es</strong> Bier",   "gut<strong>e</strong> Idee",   "gut<strong>e</strong> Ideen"],
+            ["Akk", "gut<strong>en</strong> Wein",   "gut<strong>es</strong> Bier",   "gut<strong>e</strong> Idee",   "gut<strong>e</strong> Ideen"],
+            ["Dat", "gut<strong>em</strong> Wein",   "gut<strong>em</strong> Bier",   "gut<strong>er</strong> Idee",  "gut<strong>en</strong> Ideen"],
+            ["Gen", "gut<strong>en</strong> Weines", "gut<strong>en</strong> Bieres", "gut<strong>er</strong> Idee",  "gut<strong>er</strong> Ideen"]
+          ]
+        },
+
+        {
+          "type": "callout",
+          "kind": "tip",
+          "title": "Eselsbrücke",
+          "text": "Frage dich: <strong>Zeigt der Artikel schon den Kasus?</strong> Wenn JA → schwache Endung (-e/-en). Wenn NEIN → starke Endung (= was der Artikel hätte). Wenn der Artikel TEILWEISE zeigt (z.B. „ein\" zeigt mask vs. neutr nicht) → gemischt: das Adjektiv springt ein."
+        }
+      ],
+      "exercise_theme": "Adjektivdeklination nach unbest./best. Artikel"
+    },
+
+    {
+      "id": "wortschatz-persoenlichkeit-konflikt",
+      "topic": "wortschatz",
+      "theme": "Persönlichkeitseigenschaften & Konflikt",
+      "title": "Wortfeld: Persönlichkeit & Konflikt",
+      "intro": "C1-Wortschatz rund um Persönlichkeitstypen, Gesprächsverhalten und Konfliktlösung — typisch für mündliche Prüfungen und Diskussionen.",
+      "body": [
+        { "type": "heading", "text": "Persönlichkeitstypen" },
+        {
+          "type": "table",
+          "headers": ["Begriff", "Bedeutung", "Beispiel"],
+          "rows": [
+            ["rechthaberisch", "will immer Recht haben, akzeptiert keine andere Meinung", "Ihre rechthaberische Art kostete sie das Team."],
+            ["der/die Besserwisser/in", "weiß alles besser, oft ungefragt", "Jeder kennt einen Besserwisser im Büro."],
+            ["streitsüchtig", "sucht Streit, provoziert gerne", "Er ist von Natur aus streitsüchtig."],
+            ["aufbrausend", "wird schnell wütend, explodiert", "Sein aufbrausendes Temperament macht Verhandlungen schwierig."],
+            ["gelassen", "ruhig, unaufgeregt", "Sie reagierte gelassen auf die Kritik."],
+            ["voreingenommen", "hat Vorurteile, urteilt nicht objektiv", "Er war voreingenommen gegenüber jüngeren Kollegen."]
+          ]
+        },
+
+        { "type": "heading", "text": "Verben rund um Konflikt & Gespräch" },
+        {
+          "type": "table",
+          "headers": ["Verb", "trennbar?", "Bedeutung", "Beispiel"],
+          "rows": [
+            ["einräumen", "ja (räumt ein)", "zugeben, Recht zugestehen", "Sie räumte ein, dass sie sich geirrt hatte."],
+            ["gestehen", "nein", "etwas offen zugeben", "Er gestand seinen Fehler."],
+            ["verschweigen", "nein", "absichtlich nicht erzählen", "Sie verschwieg den wahren Grund."],
+            ["sich bemühen + um", "nein, reflexiv", "sich Mühe geben für etwas", "Wir bemühen uns um eine schnelle Lösung."],
+            ["jdn. unterbrechen", "nein", "jemanden beim Sprechen stoppen", "Sie unterbrach ihn höflich, aber bestimmt."],
+            ["belasten / entlasten", "nein", "(emotionale) Last vergrößern / verringern", "Das Gespräch hat mich belastet, aber auch entlastet."]
+          ]
+        },
+
+        { "type": "heading", "text": "Nützliche Redewendungen" },
+        {
+          "type": "examples",
+          "items": [
+            "Im Nachhinein ist man immer schlauer.",
+            "Sie hat mit sich selbst auszumachen, wie sie reagiert.",
+            "Sie waren nicht auf Streit aus. <em>(= sie wollten keinen Streit)</em>",
+            "Damit hinterlässt man einen besseren Eindruck.",
+            "Das Gespräch suchen / ein Gespräch suchen <em>(= aktiv das Gespräch initiieren)</em>",
+            "Etwas berücksichtigen <em>(= in Erwägung ziehen, beachten)</em>"
+          ]
+        },
+
+        {
+          "type": "callout",
+          "kind": "tip",
+          "title": "C1-Tipp: Nominalstil",
+          "text": "Statt „Sie hat eingeräumt, dass sie sich geirrt hat\" kann man eleganter sagen: „Sie hat ihre Irrtum eingeräumt.\" Im Nominalstil wird das Verb zum Substantiv — sehr typisch in akademischer und journalistischer Sprache."
+        }
+      ],
+      "exercise_theme": "Persönlichkeitseigenschaften & Konflikt"
+    },
+
+    {
+      "id": "konnektoren-argumentation",
+      "topic": "konjunktionen",
+      "theme": "Argumentation & Konnektoren",
+      "title": "Konnektoren für Argumentation",
+      "intro": "Über reine Grammatik hinaus — wie man eine Argumentation strukturiert. Die Konnektoren sind das Skelett jedes guten Essays oder Vortrags.",
+      "body": [
+        { "type": "heading", "text": "Argumente einleiten" },
+        {
+          "type": "table",
+          "headers": ["Wendung", "Position", "Funktion"],
+          "rows": [
+            ["zum einen … zum anderen", "Satzanfang", "zwei Aspekte parallel präsentieren"],
+            ["einerseits … andererseits", "Satzanfang", "Gegensatz/Spannung zwischen Aspekten"],
+            ["sowohl … als auch", "vor Substantiven", "zwei Dinge zusammen"],
+            ["nicht nur … sondern auch", "vor Substantiven", "Steigerung: zwei Dinge, das zweite überraschend"]
+          ]
+        },
+
+        { "type": "heading", "text": "Argumente verstärken" },
+        {
+          "type": "table",
+          "headers": ["Konnektor", "Funktion", "Beispiel"],
+          "rows": [
+            ["zumal", "verstärkt einen Grund", "Wir sollten absagen, zumal viele krank sind."],
+            ["nicht zuletzt", "= besonders auch (am Ende einer Liste)", "Das schadet der Umwelt — nicht zuletzt durch Mikroplastik."],
+            ["schließlich", "= immerhin / am Ende", "Er hat es verdient — schließlich hat er hart gearbeitet."],
+            ["umso mehr / weniger", "verstärkt eine Schlussfolgerung", "Das ist umso wichtiger, als die Frist knapp ist."]
+          ]
+        },
+
+        { "type": "heading", "text": "Einwände einleiten" },
+        {
+          "type": "table",
+          "headers": ["Wendung", "Stärke", "Beispiel"],
+          "rows": [
+            ["allerdings", "mittel", "Die Idee ist gut. Allerdings ist sie schwer umsetzbar."],
+            ["jedoch", "neutral, gehoben", "Die Reform ist nötig; jedoch fehlt die Finanzierung."],
+            ["dennoch", "stark, fast Gegensatz", "Es regnete; dennoch gingen wir spazieren."],
+            ["trotzdem", "umgangssprachlich, stark", "Es regnete. Trotzdem gingen wir spazieren."],
+            ["dagegen / hingegen", "Vergleich/Kontrast", "Sie kommt heute, er hingegen erst morgen."]
+          ]
+        },
+
+        { "type": "heading", "text": "Folge & Zusammenfassung" },
+        {
+          "type": "table",
+          "headers": ["Konnektor", "Funktion", "Beispiel"],
+          "rows": [
+            ["folglich / mithin", "logische Folge, gehoben", "Die Daten sind unvollständig; folglich ist die Analyse problematisch."],
+            ["somit", "Folge, neutral", "Die Frist ist verstrichen; somit verfällt der Anspruch."],
+            ["letztlich / im Endeffekt", "abschließende Bewertung", "Letztlich entscheidet der Markt."],
+            ["zusammenfassend", "Zusammenfassung am Ende", "Zusammenfassend lässt sich sagen, dass …"]
+          ]
+        },
+
+        {
+          "type": "callout",
+          "kind": "info",
+          "title": "Für mündliche Prüfungen",
+          "text": "Drei Konnektoren pro Antwort genügen — aber sie müssen variieren. Vermeide „und … und … und …\". Stattdessen: „zum einen … zum anderen … allerdings … schließlich …\""
+        }
+      ],
+      "exercise_theme": "Argumentation & Konnektoren in Anwendung"
+    }
+  ]
+}
