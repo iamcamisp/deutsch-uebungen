@@ -1,4 +1,5 @@
 // Deutsch Übungen — app logic
+// Lessons = exercises grouped by theme; scroll within a lesson, Weiter → next theme
 (function () {
 'use strict';
 
@@ -8,61 +9,50 @@ const TODAY = new Date().toISOString().slice(0, 10);
 // ────────────────────────────────────────────────────────────────
 // State
 // ────────────────────────────────────────────────────────────────
-let DATA = null;            // loaded exercises.json
-let DECK = [];              // filtered exercises list
-let idx = 0;                // current exercise index within DECK
+let DATA = null;
+let LESSONS = [];          // [{theme, topic, exercises:[…]}], current filter applied
+let idx = 0;               // current lesson index
 let activeTopic = 'all';
 
 const state = loadState();
 
 function loadState() {
-  try {
-    return JSON.parse(localStorage.getItem(STORE_KEY)) || defaultState();
-  } catch { return defaultState(); }
+  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || defaultState(); }
+  catch { return defaultState(); }
 }
 function saveState() { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
 function defaultState() {
   return {
-    answers: {},          // {exerciseId: {correct: bool, attempts: N, lastAt: ISO}}
-    vocabStatus: {},      // {exerciseId: 'learned' | 'review' | 'unseen'}
-    streak: 0,            // consecutive days with at least one answer
+    answers: {},            // {exerciseId: {correct, attempts, lastAt}}
+    vocabStatus: {},        // {exerciseId: 'learned' | 'review'}
+    streak: 0,
     lastActiveDate: null
   };
 }
 
 function bumpStreak() {
-  if (state.lastActiveDate === TODAY) return; // already counted
+  if (state.lastActiveDate === TODAY) return;
   const y = new Date(TODAY); y.setDate(y.getDate() - 1);
-  const yISO = y.toISOString().slice(0, 10);
-  state.streak = (state.lastActiveDate === yISO) ? state.streak + 1 : 1;
+  state.streak = (state.lastActiveDate === y.toISOString().slice(0, 10))
+    ? state.streak + 1 : 1;
   state.lastActiveDate = TODAY;
-  saveState();
-  renderStats();
+  saveState(); renderStats();
 }
-
 function recordAnswer(id, correct) {
   const a = state.answers[id] || { attempts: 0, correct: false };
-  a.attempts += 1;
-  a.correct = correct;
+  a.attempts += 1; a.correct = correct;
   a.lastAt = new Date().toISOString();
   state.answers[id] = a;
-  bumpStreak();
-  saveState();
-  renderStats();
+  bumpStreak(); saveState(); renderStats();
 }
-
 function recordVocab(id, status) {
   state.vocabStatus[id] = status;
-  bumpStreak();
-  saveState();
-  renderStats();
+  bumpStreak(); saveState(); renderStats();
 }
-
 function scorePct() {
-  const entries = Object.values(state.answers).filter(a => a.attempts > 0);
-  if (entries.length === 0) return null;
-  const correct = entries.filter(a => a.correct).length;
-  return Math.round((correct / entries.length) * 100);
+  const e = Object.values(state.answers).filter(a => a.attempts > 0);
+  if (!e.length) return null;
+  return Math.round(e.filter(a => a.correct).length / e.length * 100);
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -74,7 +64,7 @@ async function init() {
     DATA = await res.json();
   } catch (e) {
     document.getElementById('card-root').innerHTML =
-      '<div class="empty">Konnte exercises.json nicht laden. Lokal? Server: <code>python3 -m http.server 8765</code></div>';
+      '<div class="empty">Konnte exercises.json nicht laden. Lokal? <code>python3 -m http.server 8765</code></div>';
     return;
   }
   renderTopics();
@@ -95,18 +85,31 @@ function wireNav() {
 
 function applyFilter(slug) {
   activeTopic = slug;
-  DECK = (slug === 'all')
+  const exercises = (slug === 'all')
     ? DATA.exercises.slice()
     : DATA.exercises.filter(e => e.topic === slug);
+
+  // Group by theme, preserving first-occurrence order
+  const groups = new Map();
+  for (const ex of exercises) {
+    const key = ex.theme || ex.topic || 'Sonstiges';
+    if (!groups.has(key)) {
+      groups.set(key, { theme: key, topic: ex.topic, exercises: [] });
+    }
+    groups.get(key).exercises.push(ex);
+  }
+  LESSONS = Array.from(groups.values());
   idx = 0;
   renderTopics();
-  renderCard();
+  renderLesson();
 }
 
 function goto(n) {
-  if (n < 0 || n >= DECK.length) return;
+  if (n < 0 || n >= LESSONS.length) return;
   idx = n;
-  renderCard();
+  renderLesson();
+  // Scroll to top of card area
+  document.getElementById('card-root').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -116,9 +119,8 @@ function renderTopics() {
   const root = document.getElementById('topics');
   const counts = {};
   DATA.exercises.forEach(e => counts[e.topic] = (counts[e.topic] || 0) + 1);
-  const total = DATA.exercises.length;
 
-  const items = [{ slug: 'all', name: 'Alle', count: total }]
+  const items = [{ slug: 'all', name: 'Alle', count: DATA.exercises.length }]
     .concat(DATA.topics.map(t => ({ slug: t.slug, name: t.name, count: counts[t.slug] || 0 })));
 
   root.innerHTML = items.map(t =>
@@ -137,34 +139,29 @@ function renderStats() {
   const pct = scorePct();
   const scoreEl = document.getElementById('score');
   const wrap = document.getElementById('score-stat');
-  if (pct === null) {
-    scoreEl.textContent = '—';
-    wrap.classList.remove('low');
-  } else {
-    scoreEl.textContent = pct + ' %';
-    wrap.classList.toggle('low', pct < 60);
-  }
+  if (pct === null) { scoreEl.textContent = '—'; wrap.classList.remove('low'); }
+  else { scoreEl.textContent = pct + ' %'; wrap.classList.toggle('low', pct < 60); }
 }
 
 function renderProgress() {
-  const total = DECK.length;
+  const total = LESSONS.length;
   const pct = total === 0 ? 0 : Math.round(((idx + 1) / total) * 100);
   document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('pos-text').textContent = `Übung ${idx + 1} von ${total}`;
+  document.getElementById('pos-text').textContent = `Thema ${idx + 1} von ${total}`;
   document.getElementById('pct-text').textContent = pct + ' %';
-  document.getElementById('nav-pos').textContent = `Übung ${idx + 1} von ${total}`;
+  document.getElementById('nav-pos').textContent = `Thema ${idx + 1} von ${total}`;
   document.getElementById('btn-back').disabled = idx === 0;
   document.getElementById('btn-next').disabled = idx === total - 1;
 }
 
 // ────────────────────────────────────────────────────────────────
-// Render: exercise card (delegates by type)
+// Render lesson = all exercises with the same theme, stacked
 // ────────────────────────────────────────────────────────────────
-function renderCard() {
+function renderLesson() {
   const root = document.getElementById('card-root');
   const nav = document.getElementById('nav');
 
-  if (DECK.length === 0) {
+  if (LESSONS.length === 0) {
     root.innerHTML = '<div class="empty">Keine Übungen für dieses Thema.</div>';
     nav.style.display = 'none';
     renderProgress();
@@ -172,89 +169,93 @@ function renderCard() {
   }
   nav.style.display = 'flex';
 
-  const ex = DECK[idx];
-  const renderer = RENDERERS[ex.type] || renderUnknown;
-  root.innerHTML = renderer(ex, idx);
-  attachExerciseHandlers(ex);
+  const lesson = LESSONS[idx];
+  const header = `
+    <div class="lesson-header">
+      <div class="lesson-label">Thema ${idx + 1} / ${LESSONS.length}</div>
+      <h2 class="lesson-theme">${lesson.theme}</h2>
+      <div class="lesson-count">${lesson.exercises.length} Übungen</div>
+    </div>`;
+
+  const cards = lesson.exercises.map((ex, i) => {
+    const renderer = RENDERERS[ex.type] || renderUnknown;
+    return renderer(ex, i, lesson.exercises.length);
+  }).join('');
+
+  root.innerHTML = header + cards;
+
+  lesson.exercises.forEach(ex => attachExerciseHandlers(ex));
   renderProgress();
 }
 
+// ────────────────────────────────────────────────────────────────
+// Renderers per exercise type
+// ────────────────────────────────────────────────────────────────
 const RENDERERS = {};
 
-// ── MCQ ────────────────────────────────────────────────────────
-RENDERERS.mcq = (ex, i) => {
-  const prev = state.answers[ex.id];
-  return cardWrap(ex, i, `
-    <div class="ex-prompt">${ex.prompt}</div>
-    ${ex.context ? `<div class="ex-context">${ex.context}</div>` : ''}
-    <div class="ex-sentence">${ex.sentence_pre}<span class="blank"></span>${ex.sentence_post}</div>
-    <div class="options" data-correct="${ex.correct_index}">
-      ${ex.options.map((opt, ix) => `
-        <button class="opt" data-idx="${ix}">
-          <span class="letter">${String.fromCharCode(65 + ix)}</span> ${opt}
-        </button>`).join('')}
-    </div>
-    <div id="fb-${ex.id}"></div>
-  `);
-};
+RENDERERS.mcq = (ex, i, total) => cardWrap(ex, i, total, `
+  <div class="ex-prompt">${ex.prompt}</div>
+  ${ex.context ? `<div class="ex-context">${ex.context}</div>` : ''}
+  <div class="ex-sentence">${ex.sentence_pre}<span class="blank"></span>${ex.sentence_post}</div>
+  <div class="options" data-correct="${ex.correct_index}">
+    ${ex.options.map((opt, ix) => `
+      <button class="opt" data-ex="${ex.id}" data-idx="${ix}">
+        <span class="letter">${String.fromCharCode(65 + ix)}</span> ${opt}
+      </button>`).join('')}
+  </div>
+  <div id="fb-${ex.id}"></div>
+`);
 
-// ── Transform (Konjunktiv I etc.) ──────────────────────────────
-RENDERERS.transform = (ex, i) => cardWrap(ex, i, `
+RENDERERS.transform = (ex, i, total) => cardWrap(ex, i, total, `
   <div class="ex-prompt">${ex.prompt}</div>
   ${ex.context ? `<div class="ex-context">${ex.context}</div>` : ''}
   <div class="ex-sentence">${ex.source}</div>
   <input type="text" class="text-input" id="answer-${ex.id}" placeholder="…">
   <div class="actions">
-    <button class="btn" data-action="check">Prüfen</button>
-    <button class="btn secondary" data-action="hint">Tipp anzeigen</button>
+    <button class="btn" data-action="check" data-ex="${ex.id}">Prüfen</button>
+    <button class="btn secondary" data-action="hint" data-ex="${ex.id}">Tipp anzeigen</button>
   </div>
   <div id="fb-${ex.id}"></div>
 `);
 
-// ── Wortstellung (word order) ──────────────────────────────────
-RENDERERS.wortstellung = (ex, i) => {
-  const words = ex.words.slice();
-  return cardWrap(ex, i, `
-    <div class="ex-prompt">${ex.prompt}</div>
-    ${ex.context ? `<div class="ex-context">${ex.context}</div>` : ''}
-    <div class="word-bank" id="bank-${ex.id}">
-      ${words.map((w, ix) => `<button class="word-chip" data-word="${escapeAttr(w)}" data-ix="${ix}">${w}</button>`).join('')}
-    </div>
-    <div class="word-target" id="target-${ex.id}">${ex.prefix || ''}<span class="cursor">|</span></div>
-    <div class="actions">
-      <button class="btn" data-action="check">Prüfen</button>
-      <button class="btn secondary" data-action="reset">Zurücksetzen</button>
-    </div>
-    <div id="fb-${ex.id}"></div>
-  `);
-};
+RENDERERS.wortstellung = (ex, i, total) => cardWrap(ex, i, total, `
+  <div class="ex-prompt">${ex.prompt}</div>
+  ${ex.context ? `<div class="ex-context">${ex.context}</div>` : ''}
+  <div class="word-bank" id="bank-${ex.id}">
+    ${ex.words.map((w, ix) => `<button class="word-chip" data-ex="${ex.id}" data-word="${escapeAttr(w)}" data-ix="${ix}">${w}</button>`).join('')}
+  </div>
+  <div class="word-target" id="target-${ex.id}">${ex.prefix || ''}<span class="cursor">|</span></div>
+  <div class="actions">
+    <button class="btn" data-action="check" data-ex="${ex.id}">Prüfen</button>
+    <button class="btn secondary" data-action="reset" data-ex="${ex.id}">Zurücksetzen</button>
+  </div>
+  <div id="fb-${ex.id}"></div>
+`);
 
-// ── Lückentext (multiple blanks) ───────────────────────────────
-RENDERERS.lueckentext = (ex, i) => {
+RENDERERS.lueckentext = (ex, i, total) => {
   let html = '';
   let blankIx = 0;
   ex.segments.forEach(seg => {
     if (seg.blank) {
-      html += `<input type="text" class="text-input inline-input" data-bix="${blankIx++}" data-answer="${escapeAttr(seg.answer)}" maxlength="6">`;
+      html += `<input type="text" class="text-input inline-input" data-ex="${ex.id}" data-bix="${blankIx++}" data-answer="${escapeAttr(seg.answer)}" maxlength="10">`;
     } else {
       html += seg.text;
     }
   });
-  return cardWrap(ex, i, `
+  return cardWrap(ex, i, total, `
     <div class="ex-prompt">${ex.prompt}</div>
     ${ex.context ? `<div class="ex-context">${ex.context}</div>` : ''}
     <div class="ex-sentence">${html}</div>
     <div class="actions">
-      <button class="btn" data-action="check">Prüfen</button>
+      <button class="btn" data-action="check" data-ex="${ex.id}">Prüfen</button>
     </div>
     <div id="fb-${ex.id}"></div>
   `);
 };
 
-// ── Vocab card ─────────────────────────────────────────────────
-RENDERERS.vocab = (ex, i) => {
+RENDERERS.vocab = (ex, i, total) => {
   const status = state.vocabStatus[ex.id] || 'unseen';
-  return cardWrap(ex, i, `
+  return cardWrap(ex, i, total, `
     <div class="vocab-word">${ex.word}</div>
     <div class="vocab-pos">${ex.pos}${ex.morphology ? ' · ' + ex.morphology : ''}</div>
     <div id="vocab-back-${ex.id}" style="display: ${status === 'unseen' ? 'none' : 'block'}">
@@ -265,21 +266,20 @@ RENDERERS.vocab = (ex, i) => {
     </div>
     <div id="vocab-controls-${ex.id}">
       ${status === 'unseen'
-        ? `<button class="btn" data-action="reveal">Definition anzeigen</button>
+        ? `<button class="btn" data-action="reveal" data-ex="${ex.id}">Definition anzeigen</button>
            <div class="vocab-reveal">Versuche zuerst, das Wort selbst zu definieren.</div>`
         : `<div class="vocab-buttons">
-             <button class="btn warn" data-action="review">Nochmal üben</button>
-             <button class="btn success" data-action="learned">Schon gelernt</button>
+             <button class="btn warn" data-action="review" data-ex="${ex.id}">Nochmal üben</button>
+             <button class="btn success" data-action="learned" data-ex="${ex.id}">Schon gelernt</button>
            </div>`}
     </div>
     <div id="fb-${ex.id}"></div>
   `);
 };
 
-// ── Writing ────────────────────────────────────────────────────
-RENDERERS.writing = (ex, i) => {
+RENDERERS.writing = (ex, i, total) => {
   const min = ex.min_words || 100;
-  return cardWrap(ex, i, `
+  return cardWrap(ex, i, total, `
     <div class="ex-prompt">${ex.prompt}</div>
     <div class="write-context">
       <div class="label">Aufgabe</div>
@@ -292,60 +292,57 @@ RENDERERS.writing = (ex, i) => {
       <span>Aktuell: <span id="wc-${ex.id}">0</span> Wörter</span>
     </div>
     <div class="actions">
-      <button class="btn" data-action="submit-text">Zur Korrektur senden</button>
+      <button class="btn" data-action="submit-text" data-ex="${ex.id}">Zur Korrektur senden</button>
       <span style="color: var(--muted); font-size: 13px;">öffnet WhatsApp / Chat</span>
     </div>
     <div id="fb-${ex.id}"></div>
   `);
 };
 
-function renderUnknown(ex) {
-  return cardWrap(ex, 0, `<div class="empty">Unbekannter Übungstyp: ${ex.type}</div>`);
+function renderUnknown(ex, i, total) {
+  return cardWrap(ex, i, total, `<div class="empty">Unbekannter Übungstyp: ${ex.type}</div>`);
 }
 
-function cardWrap(ex, i, inner) {
-  const typeLabel = LABELS[ex.type] || ex.type;
+function cardWrap(ex, i, total, inner) {
   return `
-    <div class="card active" data-id="${ex.id}" data-type="${ex.type}">
-      <div class="ex-type">${typeLabel}</div>
+    <div class="card" data-id="${ex.id}" data-type="${ex.type}">
+      <div class="ex-type">${LABELS[ex.type] || ex.type}</div>
       ${inner}
       <div class="ex-meta">
-        <span class="source">Thema: ${ex.theme || '—'}</span>
-        <span>${i + 1} / ${DECK.length}</span>
+        <span></span>
+        <span>${i + 1} / ${total}</span>
       </div>
     </div>`;
 }
 
 const LABELS = {
-  mcq: 'Multiple Choice · Konjunktionen',
-  transform: 'Umformung · Indirekte Rede',
-  wortstellung: 'Wortstellung · Satzbau',
-  lueckentext: 'Lückentext · Grammatik',
-  vocab: 'Wortschatzkarte · Wortschatz',
-  writing: 'Schreibübung · Text einreichen'
+  mcq: 'Multiple Choice',
+  transform: 'Umformung',
+  wortstellung: 'Wortstellung',
+  lueckentext: 'Lückentext',
+  vocab: 'Wortschatzkarte',
+  writing: 'Schreibübung'
 };
 
 // ────────────────────────────────────────────────────────────────
-// Event handlers per exercise type
+// Handlers — bind per-exercise
 // ────────────────────────────────────────────────────────────────
 function attachExerciseHandlers(ex) {
-  const root = document.getElementById('card-root');
-
   if (ex.type === 'mcq') {
-    root.querySelectorAll('.opt').forEach(btn => {
+    document.querySelectorAll(`.opt[data-ex="${cssEsc(ex.id)}"]`).forEach(btn => {
       btn.onclick = () => checkMCQ(ex, parseInt(btn.dataset.idx));
     });
   } else if (ex.type === 'transform') {
-    bindActions(root, {
+    bindActions(ex.id, {
       check: () => checkTransform(ex),
       hint: () => showHint(ex)
     });
   } else if (ex.type === 'wortstellung') {
     setupWortstellung(ex);
   } else if (ex.type === 'lueckentext') {
-    bindActions(root, { check: () => checkLueckentext(ex) });
+    bindActions(ex.id, { check: () => checkLueckentext(ex) });
   } else if (ex.type === 'vocab') {
-    bindActions(root, {
+    bindActions(ex.id, {
       reveal: () => revealVocab(ex),
       review: () => { recordVocab(ex.id, 'review'); flash(ex.id, 'Nochmal üben — markiert.', 'wrong'); },
       learned: () => { recordVocab(ex.id, 'learned'); flash(ex.id, 'Schon gelernt — markiert.', 'correct'); }
@@ -355,8 +352,8 @@ function attachExerciseHandlers(ex) {
   }
 }
 
-function bindActions(root, map) {
-  root.querySelectorAll('[data-action]').forEach(b => {
+function bindActions(exId, map) {
+  document.querySelectorAll(`[data-action][data-ex="${cssEsc(exId)}"]`).forEach(b => {
     const fn = map[b.dataset.action];
     if (fn) b.onclick = fn;
   });
@@ -364,31 +361,29 @@ function bindActions(root, map) {
 
 function flash(id, msg, kind) {
   const el = document.getElementById('fb-' + id);
-  if (!el) return;
-  el.innerHTML = `<div class="feedback ${kind}"><strong>${msg}</strong></div>`;
+  if (el) el.innerHTML = `<div class="feedback ${kind}"><strong>${msg}</strong></div>`;
 }
 
-// ── Type-specific checkers ─────────────────────────────────────
+// ── Checkers ──────────────────────────────────────────────────
 function checkMCQ(ex, picked) {
-  const opts = document.querySelectorAll('.opt');
+  const card = document.querySelector(`.card[data-id="${cssEsc(ex.id)}"]`);
+  const opts = card.querySelectorAll('.opt');
   opts.forEach(o => { o.classList.add('disabled'); o.onclick = null; });
-  const correct = picked === ex.correct_index;
+  const ok = picked === ex.correct_index;
   opts[ex.correct_index].classList.add('correct');
-  if (!correct) opts[picked].classList.add('wrong');
-  const kind = correct ? 'correct' : 'wrong';
-  const head = correct ? 'Richtig!' : 'Leider falsch.';
+  if (!ok) opts[picked].classList.add('wrong');
+  const kind = ok ? 'correct' : 'wrong';
+  const head = ok ? 'Richtig!' : 'Leider falsch.';
   document.getElementById('fb-' + ex.id).innerHTML =
     `<div class="feedback ${kind}"><strong>${head}</strong> ${ex.explanation}</div>`;
-  recordAnswer(ex.id, correct);
+  recordAnswer(ex.id, ok);
 }
 
 function checkTransform(ex) {
   const v = (document.getElementById('answer-' + ex.id).value || '').trim();
   const norm = s => s.toLowerCase().replace(/[„""]/g, '"').replace(/\s+/g, ' ').replace(/\.$/, '');
-  const goal = norm(ex.answer);
-  const alts = (ex.accepted_alternatives || []).map(norm);
-  const got  = norm(v);
-  const ok = got === goal || alts.includes(got);
+  const ok = norm(v) === norm(ex.answer) ||
+             (ex.accepted_alternatives || []).map(norm).includes(norm(v));
   const kind = ok ? 'correct' : 'wrong';
   const head = ok ? 'Sehr gut!' : 'Noch nicht ganz.';
   let expl = `Musterlösung: <em>${ex.answer}</em>`;
@@ -404,19 +399,17 @@ function showHint(ex) {
 }
 
 function setupWortstellung(ex) {
-  const root = document.getElementById('card-root');
   const tgt = document.getElementById('target-' + ex.id);
   const bank = document.getElementById('bank-' + ex.id);
   const chosen = [];
 
   function repaintTarget() {
-    const parts = chosen.map((w, ix) => `<span class="chosen" data-cix="${ix}">${w}</span>`);
+    const parts = chosen.map((w, ix) => `<span class="chosen" data-ex="${ex.id}" data-cix="${ix}">${w}</span>`);
     tgt.innerHTML = (ex.prefix || '') + parts.join(' ') + ' <span class="cursor">|</span>';
     tgt.querySelectorAll('.chosen').forEach(s => {
       s.onclick = () => {
         const cix = parseInt(s.dataset.cix);
         const w = chosen.splice(cix, 1)[0];
-        // Re-enable the first chip with that word in the bank
         const chip = Array.from(bank.querySelectorAll('.word-chip.used')).find(c => c.dataset.word === w);
         if (chip) chip.classList.remove('used');
         repaintTarget();
@@ -433,7 +426,7 @@ function setupWortstellung(ex) {
     };
   });
 
-  bindActions(root, {
+  bindActions(ex.id, {
     check: () => {
       const ok = chosen.length === ex.answer.length &&
         chosen.every((w, i) => w === ex.answer[i]);
@@ -454,7 +447,7 @@ function setupWortstellung(ex) {
 }
 
 function checkLueckentext(ex) {
-  const inputs = document.querySelectorAll(`[data-id="${ex.id}"] .inline-input`);
+  const inputs = document.querySelectorAll(`.card[data-id="${cssEsc(ex.id)}"] .inline-input`);
   let ok = true;
   inputs.forEach(inp => {
     const want = (inp.dataset.answer || '').toLowerCase().trim();
@@ -475,31 +468,29 @@ function revealVocab(ex) {
   document.getElementById('vocab-back-' + ex.id).style.display = 'block';
   document.getElementById('vocab-controls-' + ex.id).innerHTML = `
     <div class="vocab-buttons">
-      <button class="btn warn" data-action="review">Nochmal üben</button>
-      <button class="btn success" data-action="learned">Schon gelernt</button>
-    </div>
-  `;
-  bindActions(document.getElementById('card-root'), {
+      <button class="btn warn" data-action="review" data-ex="${ex.id}">Nochmal üben</button>
+      <button class="btn success" data-action="learned" data-ex="${ex.id}">Schon gelernt</button>
+    </div>`;
+  bindActions(ex.id, {
     review: () => { recordVocab(ex.id, 'review'); flash(ex.id, 'Nochmal üben — markiert.', 'wrong'); },
     learned: () => { recordVocab(ex.id, 'learned'); flash(ex.id, 'Schon gelernt — markiert.', 'correct'); }
   });
 }
 
 function setupWriting(ex) {
-  const root = document.getElementById('card-root');
   const ta = document.getElementById('answer-' + ex.id);
   const wc = document.getElementById('wc-' + ex.id);
   const min = ex.min_words || 100;
 
-  function countWords() {
+  function count() {
     const w = (ta.value || '').trim().split(/\s+/).filter(Boolean).length;
     wc.textContent = w;
     wc.parentElement.classList.toggle('ok', w >= min);
   }
-  ta.addEventListener('input', countWords);
-  countWords();
+  ta.addEventListener('input', count);
+  count();
 
-  bindActions(root, {
+  bindActions(ex.id, {
     'submit-text': () => {
       const txt = (ta.value || '').trim();
       if (!txt) return;
@@ -507,7 +498,6 @@ function setupWriting(ex) {
       const intro = `📝 Deutsch-Übung — Bitte korrigieren:\n\n*Aufgabe:* ${stripTags(ex.task)}\n\n---\n\n${txt}`;
       const url = `https://wa.me/${num}?text=${encodeURIComponent(intro)}`;
       window.open(url, '_blank');
-      // Mark as submitted (counted as correct for score purposes — it's a participation metric here)
       recordAnswer(ex.id, true);
       flash(ex.id, 'Text gesendet. Warte auf Cami\'s Assistant für die Korrektur.', 'correct');
     }
@@ -515,11 +505,13 @@ function setupWriting(ex) {
 }
 
 // ────────────────────────────────────────────────────────────────
-// Utilities
+// Utils
 // ────────────────────────────────────────────────────────────────
 function escapeAttr(s) { return String(s).replace(/"/g, '&quot;'); }
 function stripTags(s) { return String(s).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim(); }
+function cssEsc(s) {
+  return (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/[^a-zA-Z0-9_-]/g, '\\$&');
+}
 
-// ────────────────────────────────────────────────────────────────
 init();
 })();

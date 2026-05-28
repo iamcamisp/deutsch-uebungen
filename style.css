@@ -75,6 +75,26 @@ h1 .accent { color: var(--accent); }
   margin-bottom: 28px; letter-spacing: 0.04em;
 }
 
+/* LESSON HEADER (above stacked cards) */
+.lesson-header {
+  margin-bottom: 20px;
+  padding: 8px 0 16px;
+}
+.lesson-label {
+  font-size: 11px; color: var(--accent);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  font-weight: 600; margin-bottom: 6px;
+}
+.lesson-theme {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600; font-size: 26px; line-height: 1.25;
+  letter-spacing: -0.005em; margin: 0 0 6px 0;
+}
+.lesson-count {
+  font-size: 12px; color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
 /* CARD */
 .card {
   background: var(--card);
