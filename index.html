@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deutsch Übungen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Deutsch <span class="accent">Übungen</span></h1>
+    <div class="stats">
+      <span class="stat">Folge <strong id="streak">0</strong> Tag<span id="streak-s">e</span></span>
+      <span class="stat score" id="score-stat"><strong id="score">—</strong> Korrekt</span>
+    </div>
+  </header>
+
+  <div class="topics" id="topics"></div>
+
+  <div class="progress"><div class="progress-fill" id="progress-fill" style="width: 0%;"></div></div>
+  <div class="progress-meta">
+    <span id="pos-text">Übung — von —</span>
+    <span id="pct-text">0 %</span>
+  </div>
+
+  <div id="card-root">
+    <div class="empty">Lade Übungen…</div>
+  </div>
+
+  <div class="nav" id="nav" style="display: none;">
+    <button class="nav-btn secondary" id="btn-back">← Zurück</button>
+    <span class="pos" id="nav-pos">—</span>
+    <button class="nav-btn" id="btn-next">Weiter →</button>
+  </div>
+
+</div>
+<script src="script.js"></script>
+</body>
+</html>
