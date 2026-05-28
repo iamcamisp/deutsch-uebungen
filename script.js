@@ -199,7 +199,7 @@ function renderLesson() {
   const nav = document.getElementById('nav');
 
   if (LESSONS.length === 0) {
-    root.innerHTML = '<div class="empty">Keine Übungen für dieses Thema.</div>';
+    root.innerHTML = emptyMessage('Übungen');
     nav.style.display = 'none';
     renderProgress();
     return;
@@ -233,7 +233,7 @@ function renderTheoryPage() {
   const nav = document.getElementById('nav');
 
   if (THEORY_PAGES.length === 0) {
-    root.innerHTML = '<div class="empty">Keine Theorie für dieses Thema. Aus den nächsten Klassen wird der Inhalt generiert.</div>';
+    root.innerHTML = emptyMessage('Theorie');
     nav.style.display = 'none';
     renderProgress();
     return;
@@ -622,6 +622,15 @@ function setupWriting(ex) {
 // ────────────────────────────────────────────────────────────────
 // Utils
 // ────────────────────────────────────────────────────────────────
+function emptyMessage(section) {
+  return `<div class="empty">
+    <p>Noch keine ${section} vorhanden.</p>
+    <p style="font-size: 14px; color: var(--muted); margin-top: 10px;">
+      Die nächste automatische Aktualisierung läuft Dienstag &amp; Donnerstag um 19:45 Uhr —
+      direkt nach deiner Klasse — und erstellt Inhalte aus deinen Notizen.
+    </p>
+  </div>`;
+}
 function escapeAttr(s) { return String(s).replace(/"/g, '&quot;'); }
 function stripTags(s) { return String(s).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim(); }
 function cssEsc(s) {

@@ -122,6 +122,8 @@ Your job: read excerpts from her recent group German classes, identify the GRAMM
 
 Both are grouped BY `theme` (same 3-7 word label) so the app can cross-link.
 
+**Theory is the source of truth for themes.** Every exercise's `theme` field MUST match the `theme` field of a theory lesson you also produce (or of an existing theory lesson when extending). If you create an exercise without a matching theory lesson, it has no home page. Always: define theme on the theory side first, then produce exercises that reference it.
+
 OUTPUT FORMAT — return ONE JSON object with two top-level keys: "theory" and "exercises", each holding {topics, lessons|exercises}.
 
 ═════════════════════════════════════════════════════════
